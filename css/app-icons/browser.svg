@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 216" width="400" height="216">
+  <defs>
+    <linearGradient id="br-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E3A8A"/>
+      <stop offset="100%" stop-color="#0B132B"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="216" fill="url(#br-grad)"/>
+  <g transform="translate(160, 68)" stroke="#38BDF8" fill="none" stroke-width="4">
+    <circle cx="40" cy="40" r="38"/>
+    <ellipse cx="40" cy="40" rx="18" ry="38"/>
+    <line x1="2" y1="40" x2="78" y2="40"/>
+  </g>
+</svg>

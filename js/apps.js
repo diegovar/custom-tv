@@ -33,7 +33,8 @@
   "livetv": "<rect width=\"400\" height=\"216\" fill=\"#1e293b\"/><svg x=\"145\" y=\"53\" width=\"110\" height=\"110\" viewBox=\"0 0 400 216\" preserveAspectRatio=\"xMidYMid meet\"><rect width=\"400\" height=\"216\" fill=\"#1E293B\"/> <g transform=\"translate(155, 60)\" stroke=\"#FFFFFF\" fill=\"none\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"> <path d=\"M 28 8 L 45 24 L 62 8\"/> <rect x=\"6\" y=\"24\" width=\"78\" height=\"54\" rx=\"8\"/> <circle cx=\"28\" cy=\"51\" r=\"5\" fill=\"#EF4444\" stroke=\"none\"/> <line x1=\"42\" y1=\"51\" x2=\"70\" y2=\"51\" stroke-width=\"4\"/> </g></svg>",
   "player": "<rect width=\"400\" height=\"216\" fill=\"#262626\"/><svg x=\"145\" y=\"53\" width=\"110\" height=\"110\" viewBox=\"0 0 400 216\" preserveAspectRatio=\"xMidYMid meet\"><rect width=\"400\" height=\"216\" fill=\"#262626\"/> <g transform=\"translate(155, 62)\"> <rect x=\"4\" y=\"4\" width=\"82\" height=\"82\" rx=\"18\" fill=\"none\" stroke=\"#F97316\" stroke-width=\"4.5\"/> <polygon points=\"38,30 38,62 64,46\" fill=\"#F97316\"/> </g></svg>",
   "manual": "<rect width=\"400\" height=\"216\" fill=\"#334155\"/><svg x=\"145\" y=\"53\" width=\"110\" height=\"110\" viewBox=\"0 0 400 216\" preserveAspectRatio=\"xMidYMid meet\"><rect width=\"400\" height=\"216\" fill=\"#334155\"/> <g transform=\"translate(158, 64)\" stroke=\"#FFFFFF\" fill=\"none\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"> <path d=\"M 10 74 C 24 64, 42 66, 42 16 C 26 16, 10 24, 10 74 Z\"/> <path d=\"M 74 74 C 60 64, 42 66, 42 16 C 58 16, 74 24, 74 74 Z\"/> <line x1=\"42\" y1=\"16\" x2=\"42\" y2=\"70\"/> </g></svg>",
-  "stremio": "<rect width=\"400\" height=\"216\" fill=\"#1b122c\"/><svg x=\"140\" y=\"48\" width=\"120\" height=\"120\" viewBox=\"0 0 24 24\" preserveAspectRatio=\"xMidYMid meet\"><path fill=\"#7356bf\" d=\"M12 0a1.2 1.2 0 0 0-.85.354L.353 11.15c-.47.47-.47 1.227 0 1.697L11.15 23.647a1.2 1.2 0 0 0 1.7 0l10.797-10.8c.47-.47.47-1.226 0-1.696L12.85.354A1.2 1.2 0 0 0 12 0zm-1.674 7.586a.2.2 0 0 1 .002 0 .2.2 0 0 1 .129.04l5.729 4.214a.2.2 0 0 1 0 .323l-5.73 4.213a.2.2 0 0 1-.317-.16v-8.43a.2.2 0 0 1 .187-.2z\"/></svg>"
+  "stremio": "<rect width=\"400\" height=\"216\" fill=\"#1b122c\"/><svg x=\"140\" y=\"48\" width=\"120\" height=\"120\" viewBox=\"0 0 24 24\" preserveAspectRatio=\"xMidYMid meet\"><path fill=\"#7356bf\" d=\"M12 0a1.2 1.2 0 0 0-.85.354L.353 11.15c-.47.47-.47 1.227 0 1.697L11.15 23.647a1.2 1.2 0 0 0 1.7 0l10.797-10.8c.47-.47.47-1.226 0-1.696L12.85.354A1.2 1.2 0 0 0 12 0zm-1.674 7.586a.2.2 0 0 1 .002 0 .2.2 0 0 1 .129.04l5.729 4.214a.2.2 0 0 1 0 .323l-5.73 4.213a.2.2 0 0 1-.317-.16v-8.43a.2.2 0 0 1 .187-.2z\"/></svg>",
+  "smarthub": "<rect width=\"400\" height=\"216\" fill=\"#1428a0\"/><g transform=\"translate(70, -60) scale(11)\"><path fill=\"#ffffff\" d=\"M19.8166 10.2808l.0459 2.6934h-.023l-.7793-2.6934h-1.2837v3.3925h.8481l-.0458-2.785h.023l.8366 2.785h1.2264v-3.3925zm-16.149 0l-.6418 3.427h.9284l.4699-3.1175h.0229l.4585 3.1174h.9169l-.6304-3.4269zm5.1805 0l-.424 2.6132h-.023l-.424-2.6132H6.5788l-.0688 3.427h.8596l.023-3.0832h.0114l.573 3.0831h.8711l.5731-3.083h.023l.0228 3.083h.8596l-.0802-3.4269zm-7.2664 2.4527c.0343.0802.0229.1949.0114.2522-.0229.1146-.1031.2292-.3324.2292-.2177 0-.3438-.126-.3438-.3095v-.3323H0v.2636c0 .7679.6074.9971 1.2493.9971.6189 0 1.1346-.2178 1.2149-.7794.0458-.298.0114-.4928 0-.5616-.1605-.722-1.467-.9283-1.5588-1.3295-.0114-.0688-.0114-.1375 0-.1834.023-.1146.1032-.2292.3095-.2292.2063 0 .321.126.321.3095v.2063h.8595v-.2407c0-.745-.6762-.8596-1.1576-.8596-.6074 0-1.1117.2063-1.2034.7564-.023.149-.0344.2866.0114.4585.1376.7106 1.364.9169 1.5358 1.3524m11.152 0c.0343.0803.0228.1834.0114.2522-.023.1146-.1032.2292-.3324.2292-.2178 0-.3438-.126-.3438-.3095v-.3323h-.917v.2636c0 .7564.596.9857 1.2379.9857.6189 0 1.1232-.2063 1.2034-.7794.0459-.298.0115-.4814 0-.5616-.1375-.7106-1.4327-.9284-1.5243-1.318-.0115-.0688-.0115-.1376 0-.1835.0229-.1146.1031-.2292.3094-.2292.1948 0 .321.126.321.3095v.2063h.848v-.2407c0-.745-.6647-.8596-1.146-.8596-.6075 0-1.1004.1948-1.192.7564-.023.149-.023.2866.0114.4585.1376.7106 1.341.9054 1.513 1.3524m2.8882.4585c.2407 0 .3094-.1605.3323-.2522.0115-.0343.0115-.0917.0115-.126v-2.533h.871v2.4642c0 .0688 0 .1948-.0114.2292-.0573.6419-.5616.8482-1.192.8482-.6303 0-1.1346-.2063-1.192-.8482 0-.0344-.0114-.1604-.0114-.2292v-2.4642h.871v2.533c0 .0458 0 .0916.0115.126 0 .0917.0688.2522.3095.2522m7.1518-.0344c.2522 0 .3324-.1605.3553-.2522.0115-.0343.0115-.0917.0115-.126v-.4929h-.3553v-.5043H24v.917c0 .0687 0 .1145-.0115.2292-.0573.6303-.596.8481-1.2034.8481-.6075 0-1.1461-.2178-1.2034-.8481-.0115-.1147-.0115-.1605-.0115-.2293v-1.444c0-.0574.0115-.172.0115-.2293.0802-.6419.596-.8482 1.2034-.8482s1.1347.2063 1.2034.8482c.0115.1031.0115.2292.0115.2292v.1146h-.8596v-.1948s0-.0803-.0115-.1261c-.0114-.0802-.0802-.2521-.3438-.2521-.2521 0-.321.1604-.3438.2521-.0115.0458-.0115.1032-.0115.1605v1.5702c0 .0458 0 .0916.0115.126 0 .0917.0917.2522.3323.2522\"/></g><text x=\"200\" y=\"142\" font-family=\"'Samsung Sharp Sans', Arial, Helvetica, sans-serif\" font-weight=\"700\" font-size=\"28\" letter-spacing=\"4\" text-anchor=\"middle\" fill=\"#ffffff\">SMART HUB</text><g transform=\"translate(164, 165)\"><circle cx=\"12\" cy=\"0\" r=\"4.5\" fill=\"#00c7fd\"/><circle cx=\"28\" cy=\"0\" r=\"4.5\" fill=\"#2bd980\"/><circle cx=\"44\" cy=\"0\" r=\"4.5\" fill=\"#ffc83b\"/><circle cx=\"60\" cy=\"0\" r=\"4.5\" fill=\"#ff4d79\"/></g>"
 };
 
   function findCustomIcon(name, id) {
@@ -45,6 +46,11 @@
           '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 216" width="400" height="216">' + ICONS[k] + '</svg>'
         );
       }
+    }
+    if (key.indexOf('smarthub') >= 0 || key.indexOf('hub') >= 0 || key.indexOf('csfs') >= 0) {
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 216" width="400" height="216">' + ICONS.smarthub + '</svg>'
+      );
     }
     if (key.indexOf('hbo') >= 0 || key.indexOf('beamctv') >= 0) {
       return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
@@ -74,6 +80,7 @@
   }
 
   var SAMPLE = [
+    ['com.samsung.tv.csfs', 'Smart Hub', '#ffffff', '#1428a0'],
     ['sample.netflix', 'Netflix', '#e50914', '#000000'], ['sample.youtube', 'YouTube', '#ff0033', '#ffffff'],
     ['sample.prime', 'Prime Video', '#ffffff', '#0f79f3'], ['sample.apple', 'Apple TV', '#ffffff', '#1c1c1e'],
     ['sample.disney', 'Disney+', '#ffffff', '#0b2a43'], ['sample.max', 'Max', '#ffffff', '#002be7'],
@@ -109,7 +116,18 @@
             customCard: !!custom || (home && !!home.icon && home.icon.indexOf('.svg') >= 0)
           };
         });
-        resolve(apps.concat(homeApps.filter(function (a) { return a.source; })));
+        var systemApps = homeApps.filter(function (h) {
+          return h.id === 'com.samsung.tv.csfs' && !infos.some(function (a) { return a.id === h.id; });
+        }).map(function (h) {
+          var custom = findCustomIcon(h.name, h.id);
+          return {
+            id: h.id,
+            name: h.name,
+            icon: h.icon || custom || sampleIcon(h.name, '#ffffff', '#1428a0', h.id),
+            customCard: true
+          };
+        });
+        resolve(apps.concat(systemApps).concat(homeApps.filter(function (a) { return a.source; })));
       }, function (err) { reject(new Error(err && err.message || 'Could not read installed apps')); });
     });
   }
@@ -117,6 +135,23 @@
   function launch(id) {
     if (!isTizen) return Promise.reject(new Error(tr('Preview mode: apps only open on the TV')));
     return new Promise(function (resolve, reject) {
+      if (id === 'com.samsung.tv.csfs' || id.indexOf('csfs') >= 0 || id === 'special.smarthub') {
+        try {
+          tizen.application.launch('com.samsung.tv.csfs', resolve, function () {
+            try {
+              tizen.application.getCurrentApplication().hide();
+              resolve();
+            } catch (e) {
+              exit();
+              resolve();
+            }
+          });
+        } catch (e) {
+          exit();
+          resolve();
+        }
+        return;
+      }
       var input = homeApps.filter(function (a) { return a.id === id && a.source; })[0];
       if (input) {
         tizen.systeminfo.getPropertyValue('VIDEOSOURCE', function (video) {

@@ -18,7 +18,7 @@
   var scope = $('home'), focused = null, homeFocus = null, rowOffset = 0, skyKey = '';
   var BRAND = { netflix: '#000000', youtube: '#ffffff', prime: '#0f79f3', amazon: '#0f79f3', disney: '#0b2a43',
     apple: '#1c1c1e', hbo: '#002be7', max: '#002be7', hulu: '#0b0c0f', peacock: '#1c1c1c', spotify: '#121212',
-    twitch: '#6441a5', plex: '#1f1f1f', jellyfin: '#0b0f1d' };
+    twitch: '#6441a5', plex: '#1f1f1f', jellyfin: '#0b0f1d', stremio: '#1b122c', smarthub: '#1428a0', csfs: '#1428a0' };
 
   // ---------- settings ----------
   function loadSettings() {

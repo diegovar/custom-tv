@@ -9,14 +9,15 @@ window.TV_HOME_CONFIG = {
   // `name` and `icon` are optional and override what the TV reports.
   // Inputs are not apps: give them an `input.*` id and a `source`.
   homeApps: [
+    { id: 'com.samsung.tv.csfs', name: 'Smart Hub' },
     // { id: 'org.tizen.netflix-app', name: 'Netflix' },
     // { id: 'input.hdmi1', name: 'Game console', icon: 'css/app-icons/hdmi.svg', source: { type: 'HDMI', number: 1 } },
     // { id: 'input.hdmi2', name: 'HDMI 2', icon: 'css/app-icons/hdmi.svg', source: { type: 'HDMI', number: 2 } }
   ],
   // Apps whose id or name contains one of these come first, in this order.
   favoriteOrder: [
-    'netflix', 'youtube', 'prime', 'amazon', 'apple', 'disney', 'hbo', 'max',
-    'hulu', 'peacock', 'spotify', 'twitch', 'plex', 'jellyfin', 'browser'
+    'smarthub', 'netflix', 'youtube', 'prime', 'amazon', 'apple', 'disney', 'hbo', 'max',
+    'stremio', 'hulu', 'peacock', 'spotify', 'twitch', 'plex', 'jellyfin', 'browser'
   ],
   // language: 'en-GB' or 'pt-PT'. hidden: [] shows every installed app on first run;
   // null hides everything not listed in homeApps. Viewers can change all of these in Settings.

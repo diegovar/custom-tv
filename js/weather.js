@@ -62,10 +62,12 @@
     };
   }
 
-  function readCache() {
+  function readCache(loc) {
     try {
       var c = JSON.parse(localStorage.getItem(CACHE_KEY));
-      return c && c.raw ? normalize(c.raw, c.fetchedAt) : null;
+      if (!c || !c.raw) return null;
+      if (loc && (!c.loc || c.loc.latitude !== loc.latitude || c.loc.longitude !== loc.longitude)) return null;
+      return normalize(c.raw, c.fetchedAt);
     } catch (e) { return null; }
   }
 
@@ -77,7 +79,13 @@
       return r.json();
     }).then(function (raw) {
       var at = Date.now();
-      try { localStorage.setItem(CACHE_KEY, JSON.stringify({ raw: raw, fetchedAt: at })); } catch (e) { /* storage full */ }
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          raw: raw,
+          fetchedAt: at,
+          loc: { latitude: loc.latitude, longitude: loc.longitude }
+        }));
+      } catch (e) { /* storage full */ }
       return normalize(raw, at);
     }).finally(function () { if (timer) clearTimeout(timer); });
   }

@@ -11,7 +11,7 @@
   var L = window.TVI18n, tr = L.text;
   var settings = loadSettings();
   settings.language = L.setLanguage(settings.language);
-  var weather = W.cached();
+  var weather = W.cached(CFG.location);
   var weatherError = null, lastAttempt = 0;
   var allApps = [], shownApps = [];
   var precip = window.TVSky.Precip($('precip'), $('flash'));

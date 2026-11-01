@@ -1,8 +1,8 @@
 // Edit these and reinstall (tools/install.sh) to change location or defaults.
 window.TV_HOME_CONFIG = {
   // Weather location. Find coordinates at https://open-meteo.com/en/docs (search a city).
-  location: { name: 'Porto', latitude: 41.1496, longitude: -8.611 },
-  locale: 'en-GB',
+  location: { name: 'Sydney', latitude: -33.8688, longitude: 151.2093 },
+  locale: 'en-AU',
   weatherRefreshMinutes: 15,
   // Tiles pinned first, in this order. List installed app IDs with:
   //   ~/tizen-studio/tools/sdb -s <tv-ip>:26101 shell 0 vd_applist   (use the app_tizen_id lines)

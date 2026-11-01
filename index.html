@@ -91,6 +91,31 @@
       </div>
     </section>
 
+    <section id="photos" class="overlay scope" hidden>
+      <div class="panel photos-panel">
+        <div class="panel-head">
+          <div>
+            <div class="eyebrow" data-i18n="Settings">Definições</div>
+            <h3 data-i18n="Google Photos Album">Álbum Google Fotos</h3>
+          </div>
+          <button class="pill-btn focusable" data-action="close" data-i18n="Close">Fechar</button>
+        </div>
+        <div class="photos-body">
+          <p class="photos-desc" data-i18n="Enter the Google Photos shared album URL or just the code:">Insira o link partilhado do álbum Google Fotos ou apenas o código:</p>
+          <div class="input-wrap">
+            <input id="albumInput" class="text-input focusable" type="text" placeholder="https://photos.app.goo.gl/... or code" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          </div>
+          <div id="albumStatus" class="album-status"></div>
+          <div class="photos-actions">
+            <button id="btnSaveAlbum" class="pill-btn focusable" data-photo-action="save" data-i18n="Save & Load">Guardar e carregar</button>
+            <button id="btnNextPhoto" class="pill-btn focusable" data-photo-action="next" data-i18n="Next Photo">Foto seguinte</button>
+            <button id="btnRefreshAlbum" class="pill-btn focusable" data-photo-action="refresh" data-i18n="Refresh">Atualizar</button>
+            <button id="btnClearAlbum" class="pill-btn danger focusable" data-photo-action="clear" data-i18n="Remove Album">Remover álbum</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="ambient" class="ambient scope" hidden>
       <div class="amb-time" id="ambTime"></div>
       <div class="amb-date" id="ambDate"></div>
@@ -108,6 +133,7 @@
   <script src="js/sky.js"></script>
   <script src="js/landscape.js"></script>
   <script src="js/apps.js"></script>
+  <script src="js/photos.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

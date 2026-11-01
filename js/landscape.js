@@ -19,11 +19,13 @@
   }
 
   function render(element, state) {
-    var scene = select(state), key = scene.asset + '|' + scene.filter + '|' + state.kind;
+    var isPhoto = !!state.photoUrl;
+    var scene = isPhoto ? { asset: 'photo', filter: 'none', url: state.photoUrl } : select(state);
+    var url = scene.url || ('css/landscapes/' + scene.asset + '.png');
+    var key = isPhoto ? ('photo|' + url) : (scene.asset + '|' + scene.filter + '|' + state.kind);
     if (key === requested) return;
     requested = key;
     var ticket = ++generation, image = new Image();
-    var url = 'css/landscapes/' + scene.asset + '.png';
     image.onload = function () {
       if (ticket !== generation) return;
       var layers = element.querySelectorAll('.landscape-layer'), next = current === 0 ? 1 : 0;
@@ -32,8 +34,13 @@
       layers[next].style.opacity = '1';
       if (current >= 0) layers[current].style.opacity = '0';
       current = next;
-      element.dataset.weather = state.kind;
-      element.dataset.scene = scene.asset;
+      if (isPhoto) {
+        element.dataset.scene = 'photo';
+        delete element.dataset.weather;
+      } else {
+        element.dataset.weather = state.kind;
+        element.dataset.scene = scene.asset;
+      }
     };
     image.onerror = function () {
       if (ticket !== generation) return;

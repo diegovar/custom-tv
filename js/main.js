@@ -137,11 +137,13 @@
     var ph = phase(now), cur = weather ? weather.current : null;
     var d = cur ? W.describe(cur.code) : { kind: 'clear', intensity: 0 };
     var cloud = cur ? cur.cloud : 0.1;
-    var key = [ph, Math.round(cloud * 10), d.kind, now.getDate()].join('|');
+    var isPhotosMode = settings.scenery === 'photos' && window.TVPhotos && window.TVPhotos.hasPhotos();
+    var photoUrl = isPhotosMode ? window.TVPhotos.currentPhoto(now, +settings.photoInterval || 5) : null;
+    var key = [isPhotosMode ? 'photo' : ph, Math.round(cloud * 10), d.kind, now.getDate(), photoUrl || ''].join('|');
     if (key !== skyKey) {
       skyKey = key;
       window.TVSky.render($('sky'), { phase: ph, cloud: cloud, kind: d.kind, date: now });
-      window.TVLandscape.render($('landscape'), { phase: ph, cloud: cloud, kind: d.kind });
+      window.TVLandscape.render($('landscape'), { phase: ph, cloud: cloud, kind: d.kind, photoUrl: photoUrl });
       document.body.dataset.phase = ph;
     }
     precip.set(settings.effects ? d.kind : null, d.intensity);
@@ -288,7 +290,8 @@
     { key: 'language', label: 'Language', values: [['pt-PT', 'Português (Portugal)'], ['en-GB', 'English']] },
     { key: 'unit', label: 'Temperature', values: [['C', 'Celsius'], ['F', 'Fahrenheit']] },
     { key: 'clock', label: 'Clock', values: [['24', '24-hour'], ['12', '12-hour']] },
-    { key: 'scenery', label: 'Scenery', values: [['auto', 'Time & weather'], ['night', 'Night'], ['dawn', 'Dawn'], ['day', 'Day'], ['dusk', 'Dusk']] },
+    { key: 'scenery', label: 'Scenery', values: [['auto', 'Time & weather'], ['photos', 'Google Photos'], ['night', 'Night'], ['dawn', 'Dawn'], ['day', 'Day'], ['dusk', 'Dusk']] },
+    { key: 'photoInterval', label: 'Photo interval', values: [['1', '1 min'], ['5', '5 min'], ['15', '15 min'], ['30', '30 min'], ['60', '1 hour']] },
     { key: 'effects', label: 'Rain & snow effects', values: [[true, 'On'], [false, 'Off']] }
   ];
   function prefValue(p) {
@@ -296,16 +299,84 @@
     return tr(v ? v[1] : p.values[0][1]);
   }
   function renderSettings() {
+    var photoInfo = window.TVPhotos ? window.TVPhotos.getInfo() : null;
+    var photoLabel = photoInfo && photoInfo.count > 0 ? (photoInfo.count + ' ' + tr('photos')) : tr('Not configured');
     $('prefs').innerHTML = '<div class="col-title">' + tr('Preferences') + '<span>' + tr('Press OK to change') + '</span></div>' +
       PREFS.map(function (p) {
         return '<button class="row focusable" data-pref="' + p.key + '"><span>' + (p.key === 'language' && settings.language === 'pt-PT' ? 'Idioma / Language' : tr(p.label)) + '</span><b>' + prefValue(p) + '</b></button>';
       }).join('') +
+      '<button class="row focusable" data-action="photos"><span>' + tr('Google Photos album') + '</span><b>' + photoLabel + '</b></button>' +
       '<div class="note">' + esc(tr('Weather for {place} from Open-Meteo. Landscapes change with the weather and time of day.', { place: CFG.location.name })) + '</div>';
     $('appList').innerHTML = sortApps(allApps).map(function (a) {
       var off = (settings.hidden || []).indexOf(a.id) >= 0;
       return '<button class="row app-row focusable' + (off ? ' off' : '') + '" data-toggle="' + esc(a.id) + '">' +
         '<span>' + esc(a.name) + '</span><b>' + (off ? tr('Hidden') : I.ui.check) + '</b></button>';
     }).join('');
+  }
+
+  function renderPhotosModal() {
+    var P = window.TVPhotos;
+    if (!P) return;
+    var info = P.getInfo();
+    var inp = $('albumInput');
+    var st = $('albumStatus');
+    if (inp && !inp.value && info.albumUrl) inp.value = info.albumUrl;
+    if (st) {
+      if (info.isFetching) {
+        st.innerHTML = '<span class="status-badge loading">…</span> ' + tr('Loading album…');
+      } else if (info.count > 0) {
+        st.innerHTML = '<span class="status-badge connected">●</span> ' + tr('{count} photos connected', { count: info.count });
+      } else {
+        st.innerHTML = '<span class="status-badge disconnected">○</span> ' + tr('No album connected');
+      }
+    }
+  }
+
+  function handlePhotoAction(action) {
+    var P = window.TVPhotos;
+    if (!P) return;
+    if (action === 'save') {
+      var val = $('albumInput') ? $('albumInput').value : '';
+      if (!val) { toast(tr('Please enter an album link or code')); return; }
+      $('albumStatus').innerHTML = '<span class="status-badge loading">…</span> ' + tr('Loading album…');
+      P.fetchAlbum(val).then(function (res) {
+        toast(tr('Album loaded: {count} photos', { count: res.count }));
+        settings.scenery = 'photos';
+        saveSettings();
+        renderPhotosModal();
+        renderSky(new Date());
+      }).catch(function (err) {
+        toast(tr(err.message || 'Could not load album'));
+        renderPhotosModal();
+      });
+    } else if (action === 'next') {
+      if (!P.hasPhotos()) { toast(tr('No photos in album')); return; }
+      P.nextPhoto();
+      renderSky(new Date());
+      toast(tr('Switched to next photo'));
+    } else if (action === 'refresh') {
+      if (!P.hasPhotos()) { toast(tr('No album to refresh')); return; }
+      $('albumStatus').innerHTML = '<span class="status-badge loading">…</span> ' + tr('Refreshing album…');
+      P.sync(true).then(function (res) {
+        var count = res ? res.count : (P.getInfo() ? P.getInfo().count : 0);
+        toast(tr('Album refreshed ({count} photos)', { count: count }));
+        renderPhotosModal();
+        renderSky(new Date());
+      }).catch(function (err) {
+        toast(tr(err.message || 'Failed to refresh album'));
+        renderPhotosModal();
+      });
+    } else if (action === 'clear') {
+      P.clearAlbum();
+      if ($('albumInput')) $('albumInput').value = '';
+      if (settings.scenery === 'photos') {
+        settings.scenery = 'auto';
+        saveSettings();
+      }
+      toast(tr('Album removed'));
+      renderPhotosModal();
+      renderSky(new Date());
+    }
   }
 
   function renderAmbient(now) {
@@ -322,6 +393,7 @@
     var el = $(id);
     if (id === 'forecast') renderForecast();
     if (id === 'settings') renderSettings();
+    if (id === 'photos') renderPhotosModal();
     if (id === 'ambient') { renderAmbient(new Date()); document.body.classList.add('ambient-on'); }
     else document.body.classList.add('overlay-on');
     el.hidden = false;
@@ -381,8 +453,14 @@
 
   function activate(el) {
     if (!el) return;
+    if (el.tagName === 'INPUT') {
+      el.focus();
+      return;
+    }
     var d = el.dataset;
-    if (d.app) {
+    if (d.photoAction) {
+      handlePhotoAction(d.photoAction);
+    } else if (d.app) {
       var app = allApps.filter(function (a) { return a.id === d.app; })[0];
       window.TVApps.launch(d.app).catch(function (e) { toast(tr('Could not open {app}.', { app: app ? app.name : tr('app') }) + ' ' + tr(e.message)); });
     } else if (d.pref) {
@@ -423,6 +501,23 @@
 
   document.addEventListener('keydown', function (e) {
     var k = e.keyCode;
+    if (document.activeElement && document.activeElement.tagName === 'INPUT') {
+      if (k === 13) {
+        document.activeElement.blur();
+        e.preventDefault();
+        return;
+      }
+      if (k === 10009 || k === 27) {
+        document.activeElement.blur();
+        e.preventDefault();
+        return;
+      }
+      if (k === 38 || k === 40) {
+        document.activeElement.blur();
+      } else {
+        return; // Allow typing into input
+      }
+    }
     if (scope === $('ambient')) { e.preventDefault(); closeOverlay(); return; }
     if (k === 37) move('left');
     else if (k === 38) move('up');
@@ -486,6 +581,15 @@
     loadApps();
     refreshWeather(false);
     if (q && q.get('open')) setTimeout(function () { openOverlay(q.get('open')); }, 300);
+    if (window.TVPhotos) {
+      if (CFG.googlePhotosAlbumUrl && !window.TVPhotos.hasPhotos()) {
+        window.TVPhotos.fetchAlbum(CFG.googlePhotosAlbumUrl).then(function () {
+          renderSky(new Date());
+        }).catch(function () {});
+      } else {
+        window.TVPhotos.sync(false);
+      }
+    }
     setInterval(function () { renderClock(new Date()); renderSky(new Date()); }, 5000);
     setInterval(function () { refreshWeather(false); renderWeather(); }, 60e3);
     document.addEventListener('visibilitychange', function () {

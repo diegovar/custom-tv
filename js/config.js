@@ -19,7 +19,10 @@ window.TV_HOME_CONFIG = {
     'smarthub', 'netflix', 'youtube', 'prime', 'amazon', 'apple', 'disney', 'hbo', 'max',
     'stremio', 'hulu', 'peacock', 'spotify', 'twitch', 'plex', 'jellyfin', 'browser'
   ],
+  // Optional Google Photos Shared Album link (e.g. 'https://photos.app.goo.gl/...').
+  // Can also be set or changed anytime directly in TV Settings.
+  googlePhotosAlbumUrl: '',
   // language: 'en-GB' or 'pt-PT'. hidden: [] shows every installed app on first run;
   // null hides everything not listed in homeApps. Viewers can change all of these in Settings.
-  defaults: { language: 'en-GB', unit: 'C', clock: '24', scenery: 'auto', effects: true, hidden: [] }
+  defaults: { language: 'en-GB', unit: 'C', clock: '24', scenery: 'auto', photoInterval: '5', effects: true, hidden: [] }
 };

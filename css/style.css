@@ -435,3 +435,35 @@ body.ambient-on .scrim { opacity: 0.55; }
 #prefs .row { gap: 18px; flex-shrink: 0; }
 #prefs .row > span { white-space: normal; overflow: visible; }
 #prefs .row b { margin-left: 0; text-align: right; }
+
+/* ---------- photos panel ---------- */
+.photos-panel { width: 1000px; height: 580px; display: flex; flex-direction: column; }
+.photos-body { display: flex; flex-direction: column; gap: 20px; margin-top: 10px; }
+.photos-desc { font-size: 22px; color: var(--fg2); margin: 0; line-height: 1.4; }
+.input-wrap { width: 100%; box-sizing: border-box; }
+.text-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  border-radius: 16px;
+  padding: 18px 24px;
+  font-size: 24px;
+  color: var(--fg);
+  font-family: inherit;
+  outline: none;
+  transition: all 0.2s ease;
+}
+.text-input:focus, .text-input.focused {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #ffd45c;
+  box-shadow: 0 0 0 3px rgba(255, 212, 92, 0.3);
+}
+.album-status { font-size: 20px; color: var(--fg2); display: flex; align-items: center; gap: 10px; min-height: 32px; }
+.status-badge { font-size: 22px; line-height: 1; }
+.status-badge.connected { color: #7ee2a0; }
+.status-badge.loading { color: #ffd45c; }
+.status-badge.disconnected { color: var(--fg3); }
+.photos-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 10px; }
+.pill-btn.danger { background: rgba(235, 87, 87, 0.18); border-color: rgba(235, 87, 87, 0.35); color: #ff8e8e; }
+.pill-btn.danger.focused { background: #eb5757; color: #fff; box-shadow: 0 0 0 3px rgba(235, 87, 87, 0.4); }

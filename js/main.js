@@ -1,3 +1,5 @@
+/// <reference path="../../index.d.ts" />
+
 (function () {
   'use strict';
 
@@ -192,7 +194,8 @@
     grid.innerHTML = '';
     shownApps.forEach(function (a, i) {
       var tile = document.createElement('button');
-      tile.className = 'tile focusable' + (a.sample ? ' sample' : '');
+      var isCover = a.sample || a.customCard;
+      tile.className = 'tile focusable' + (isCover ? ' sample' : '');
       tile.dataset.app = a.id;
       tile.dataset.idx = i;
       var bc = brandColor(a);
@@ -201,7 +204,7 @@
       if (a.icon) {
         var img = new Image();
         img.alt = '';
-        img.onload = function () { if (!a.sample) tintFromIcon(img, tile); };
+        img.onload = function () { if (!isCover) tintFromIcon(img, tile); };
         img.onerror = function () { img.remove(); tile.classList.add('no-icon'); };
         img.src = a.icon;
         tile.insertBefore(img, tile.firstChild);

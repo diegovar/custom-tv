@@ -24,3 +24,9 @@ screenshots/
 *.tgz
 *.db
 *.db-journal
+
+# VS Code & Tizen Extension build artifacts
+Debug/
+.tizen-rds/
+.vscode/
+

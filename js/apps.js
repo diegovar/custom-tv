@@ -32,11 +32,13 @@
   "browser": "<rect width=\"400\" height=\"216\" fill=\"#10192A\"/><svg x=\"145\" y=\"53\" width=\"110\" height=\"110\" viewBox=\"0 0 400 216\" preserveAspectRatio=\"xMidYMid meet\"><defs> <linearGradient id=\"br-grad\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\"> <stop offset=\"0%\" stop-color=\"#1E3A8A\"/> <stop offset=\"100%\" stop-color=\"#0B132B\"/> </linearGradient> </defs> <rect width=\"400\" height=\"216\" fill=\"url(#br-grad)\"/> <g transform=\"translate(160, 68)\" stroke=\"#38BDF8\" fill=\"none\" stroke-width=\"4\"> <circle cx=\"40\" cy=\"40\" r=\"38\"/> <ellipse cx=\"40\" cy=\"40\" rx=\"18\" ry=\"38\"/> <line x1=\"2\" y1=\"40\" x2=\"78\" y2=\"40\"/> </g></svg>",
   "livetv": "<rect width=\"400\" height=\"216\" fill=\"#1e293b\"/><svg x=\"145\" y=\"53\" width=\"110\" height=\"110\" viewBox=\"0 0 400 216\" preserveAspectRatio=\"xMidYMid meet\"><rect width=\"400\" height=\"216\" fill=\"#1E293B\"/> <g transform=\"translate(155, 60)\" stroke=\"#FFFFFF\" fill=\"none\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"> <path d=\"M 28 8 L 45 24 L 62 8\"/> <rect x=\"6\" y=\"24\" width=\"78\" height=\"54\" rx=\"8\"/> <circle cx=\"28\" cy=\"51\" r=\"5\" fill=\"#EF4444\" stroke=\"none\"/> <line x1=\"42\" y1=\"51\" x2=\"70\" y2=\"51\" stroke-width=\"4\"/> </g></svg>",
   "player": "<rect width=\"400\" height=\"216\" fill=\"#262626\"/><svg x=\"145\" y=\"53\" width=\"110\" height=\"110\" viewBox=\"0 0 400 216\" preserveAspectRatio=\"xMidYMid meet\"><rect width=\"400\" height=\"216\" fill=\"#262626\"/> <g transform=\"translate(155, 62)\"> <rect x=\"4\" y=\"4\" width=\"82\" height=\"82\" rx=\"18\" fill=\"none\" stroke=\"#F97316\" stroke-width=\"4.5\"/> <polygon points=\"38,30 38,62 64,46\" fill=\"#F97316\"/> </g></svg>",
-  "manual": "<rect width=\"400\" height=\"216\" fill=\"#334155\"/><svg x=\"145\" y=\"53\" width=\"110\" height=\"110\" viewBox=\"0 0 400 216\" preserveAspectRatio=\"xMidYMid meet\"><rect width=\"400\" height=\"216\" fill=\"#334155\"/> <g transform=\"translate(158, 64)\" stroke=\"#FFFFFF\" fill=\"none\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"> <path d=\"M 10 74 C 24 64, 42 66, 42 16 C 26 16, 10 24, 10 74 Z\"/> <path d=\"M 74 74 C 60 64, 42 66, 42 16 C 58 16, 74 24, 74 74 Z\"/> <line x1=\"42\" y1=\"16\" x2=\"42\" y2=\"70\"/> </g></svg>"
+  "manual": "<rect width=\"400\" height=\"216\" fill=\"#334155\"/><svg x=\"145\" y=\"53\" width=\"110\" height=\"110\" viewBox=\"0 0 400 216\" preserveAspectRatio=\"xMidYMid meet\"><rect width=\"400\" height=\"216\" fill=\"#334155\"/> <g transform=\"translate(158, 64)\" stroke=\"#FFFFFF\" fill=\"none\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"> <path d=\"M 10 74 C 24 64, 42 66, 42 16 C 26 16, 10 24, 10 74 Z\"/> <path d=\"M 74 74 C 60 64, 42 66, 42 16 C 58 16, 74 24, 74 74 Z\"/> <line x1=\"42\" y1=\"16\" x2=\"42\" y2=\"70\"/> </g></svg>",
+  "stremio": "<rect width=\"400\" height=\"216\" fill=\"#1b122c\"/><svg x=\"140\" y=\"48\" width=\"120\" height=\"120\" viewBox=\"0 0 24 24\" preserveAspectRatio=\"xMidYMid meet\"><path fill=\"#7356bf\" d=\"M12 0a1.2 1.2 0 0 0-.85.354L.353 11.15c-.47.47-.47 1.227 0 1.697L11.15 23.647a1.2 1.2 0 0 0 1.7 0l10.797-10.8c.47-.47.47-1.226 0-1.696L12.85.354A1.2 1.2 0 0 0 12 0zm-1.674 7.586a.2.2 0 0 1 .002 0 .2.2 0 0 1 .129.04l5.729 4.214a.2.2 0 0 1 0 .323l-5.73 4.213a.2.2 0 0 1-.317-.16v-8.43a.2.2 0 0 1 .187-.2z\"/></svg>"
 };
 
-  function sampleIcon(name, fg, bg, id) {
-    var key = (id || name || '').toLowerCase().replace(/[^a-z]/g, '');
+  function findCustomIcon(name, id) {
+    var raw = ((id || '') + ' ' + (name || '')).toLowerCase();
+    var key = raw.replace(/[^a-z0-9]/g, '');
     for (var k in ICONS) {
       if (key.indexOf(k) >= 0) {
         return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
@@ -44,6 +46,27 @@
         );
       }
     }
+    if (key.indexOf('hbo') >= 0 || key.indexOf('beamctv') >= 0) {
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 216" width="400" height="216">' + ICONS.max + '</svg>'
+      );
+    }
+    if (key.indexOf('amazon') >= 0) {
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 216" width="400" height="216">' + ICONS.prime + '</svg>'
+      );
+    }
+    if (key.indexOf('emanual') >= 0 || key.indexOf('userguide') >= 0) {
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 216" width="400" height="216">' + ICONS.manual + '</svg>'
+      );
+    }
+    return null;
+  }
+
+  function sampleIcon(name, fg, bg, id) {
+    var custom = findCustomIcon(name, id);
+    if (custom) return custom;
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="216"><rect width="400" height="216" fill="' + bg +
       '"/><text x="200" y="126" font-family="Helvetica, Arial" font-weight="700" font-size="46" text-anchor="middle" fill="' +
       fg + '">' + name + '</text></svg>';
@@ -54,10 +77,10 @@
     ['sample.netflix', 'Netflix', '#e50914', '#000000'], ['sample.youtube', 'YouTube', '#ff0033', '#ffffff'],
     ['sample.prime', 'Prime Video', '#ffffff', '#0f79f3'], ['sample.apple', 'Apple TV', '#ffffff', '#1c1c1e'],
     ['sample.disney', 'Disney+', '#ffffff', '#0b2a43'], ['sample.max', 'Max', '#ffffff', '#002be7'],
-    ['sample.spotify', 'Spotify', '#1ed760', '#121212'], ['sample.plex', 'Plex', '#ffffff', '#1f1f1f'],
-    ['sample.twitch', 'Twitch', '#ffffff', '#9146FF'], ['sample.browser', 'Browser', '#ffffff', '#2b5bd7'],
-    ['sample.livetv', 'Live TV', '#ffffff', '#3a3f4b'], ['sample.player', 'Media Player', '#ffffff', '#c2410c'],
-    ['sample.manual', 'User Guide', '#ffffff', '#334155']
+    ['sample.spotify', 'Spotify', '#1ed760', '#121212'], ['sample.stremio', 'Stremio', '#7356bf', '#1b122c'],
+    ['sample.plex', 'Plex', '#ffffff', '#1f1f1f'], ['sample.twitch', 'Twitch', '#ffffff', '#9146FF'],
+    ['sample.browser', 'Browser', '#ffffff', '#2b5bd7'], ['sample.livetv', 'Live TV', '#ffffff', '#3a3f4b'],
+    ['sample.player', 'Media Player', '#ffffff', '#c2410c'], ['sample.manual', 'User Guide', '#ffffff', '#334155']
   ];
 
   function list() {
@@ -76,7 +99,15 @@
           return a.id !== me && (a.show || homeApps.some(function (h) { return h.id === a.id; }));
         }).map(function (a) {
           var home = homeApps.filter(function (h) { return h.id === a.id; })[0];
-          return { id: a.id, name: home ? home.name : a.name, icon: home ? home.icon : iconUrl(a.iconPath) };
+          var appName = home ? home.name : a.name;
+          var custom = findCustomIcon(appName, a.id);
+          var icon = (home && home.icon) || custom || iconUrl(a.iconPath);
+          return {
+            id: a.id,
+            name: appName,
+            icon: icon,
+            customCard: !!custom || (home && !!home.icon && home.icon.indexOf('.svg') >= 0)
+          };
         });
         resolve(apps.concat(homeApps.filter(function (a) { return a.source; })));
       }, function (err) { reject(new Error(err && err.message || 'Could not read installed apps')); });

@@ -443,8 +443,6 @@
   }
 
   function closeOverlay() {
-    if (scope === $('home') && overlayStack.length === 0) return;
-
     if (scope && scope !== $('home')) {
       scope.hidden = true;
     }
@@ -456,6 +454,10 @@
       if (scope.id === 'settings') renderSettings();
       focusEl(prev.focused && document.contains(prev.focused) ? prev.focused : scope.querySelector('.focusable'));
     } else {
+      var overlays = document.querySelectorAll('.overlay, .ambient');
+      for (var i = 0; i < overlays.length; i++) {
+        overlays[i].hidden = true;
+      }
       document.body.classList.remove('ambient-on');
       document.body.classList.remove('overlay-on');
       scope = $('home');
@@ -586,8 +588,10 @@
   document.addEventListener('mouseover', function (e) {
     var el = e.target.closest && e.target.closest('.focusable');
     if (el) {
-      var container = el.closest('.overlay, .ambient, #home');
-      if (container && !container.hidden) {
+      var isOverlayActive = document.body.classList.contains('overlay-on') || document.body.classList.contains('ambient-on');
+      if (isOverlayActive && $('home').contains(el)) return;
+      var container = el.closest('.overlay:not([hidden]), .ambient:not([hidden]), #home');
+      if (container) {
         if (container !== scope) scope = container;
         if (el !== focused) focusEl(el);
       }
@@ -597,8 +601,10 @@
     if (scope === $('ambient')) { closeOverlay(); return; }
     var el = e.target.closest && e.target.closest('.focusable');
     if (el) {
-      var container = el.closest('.overlay, .ambient, #home');
-      if (container && !container.hidden) scope = container;
+      var isOverlayActive = document.body.classList.contains('overlay-on') || document.body.classList.contains('ambient-on');
+      if (isOverlayActive && $('home').contains(el)) return;
+      var container = el.closest('.overlay:not([hidden]), .ambient:not([hidden]), #home');
+      if (container) scope = container;
       focusEl(el);
       activate(el);
     } else if (e.target && e.target.classList && e.target.classList.contains('overlay')) {

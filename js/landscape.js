@@ -52,6 +52,7 @@
       delete element.dataset.weather;
       delete element.dataset.scene;
     };
+    image.referrerPolicy = 'no-referrer';
     image.src = url;
   }
 

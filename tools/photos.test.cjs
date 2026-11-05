@@ -111,3 +111,51 @@ test('landscape renderer displays photoUrl with natural colors (filter: none)', 
   assert.equal(layers[0].style.filter, 'none', 'Natural colors: no filter applied');
   assert.equal(layers[0].style.opacity, '1');
 });
+
+test('fetchAlbum uses photosResolverUrl when configured and parses photo list', async () => {
+  let calledUrl = '';
+  const fakeFetch = async (url) => {
+    calledUrl = url;
+    return {
+      ok: true,
+      json: async () => ({
+        photos: [
+          'https://lh3.googleusercontent.com/pw/photo1=w3840-h2160',
+          'https://lh3.googleusercontent.com/pw/photo2=w3840-h2160'
+        ],
+        count: 2
+      })
+    };
+  };
+
+  const store = {};
+  const localStorage = {
+    getItem: (k) => (k in store ? store[k] : null),
+    setItem: (k, v) => { store[k] = String(v); },
+    removeItem: (k) => { delete store[k]; }
+  };
+  const context = vm.createContext({
+    window: {
+      TV_HOME_CONFIG: {
+        photosResolverUrl: 'https://test-resolver.run.app'
+      }
+    },
+    localStorage,
+    fetch: fakeFetch,
+    Date,
+    Math,
+    setTimeout,
+    clearTimeout
+  });
+  const code = fs.readFileSync(path.join(__dirname, '../js/photos.js'), 'utf8');
+  vm.runInContext(code, context);
+
+  const res = await context.window.TVPhotos.fetchAlbum('https://photos.app.goo.gl/sample123');
+  assert.equal(res.count, 2);
+  assert.equal(
+    calledUrl,
+    'https://test-resolver.run.app?url=https%3A%2F%2Fphotos.app.goo.gl%2Fsample123'
+  );
+  assert.equal(context.window.TVPhotos.hasPhotos(), true);
+  assert.ok(context.window.TVPhotos.currentPhoto());
+});

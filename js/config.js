@@ -22,6 +22,8 @@ window.TV_HOME_CONFIG = {
   // Optional Google Photos Shared Album link (e.g. 'https://photos.app.goo.gl/...').
   // Can also be set or changed anytime directly in TV Settings.
   googlePhotosAlbumUrl: '',
+  // Cloud Run microservice that extracts 4K photo URLs from shared album links (bypasses browser CORS/403).
+  photosResolverUrl: 'https://resolve-photos-1054251611038.us-central1.run.app',
   // language: 'en-GB' or 'pt-PT'. hidden: [] shows every installed app on first run;
   // null hides everything not listed in homeApps. Viewers can change all of these in Settings.
   defaults: { language: 'en-GB', unit: 'C', clock: '24', scenery: 'auto', photoInterval: '5', effects: true, hidden: [] }

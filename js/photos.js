@@ -121,13 +121,23 @@
     var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
     var timer = ctrl && setTimeout(function () { ctrl.abort(); }, 20000);
 
-    return fetch(targetUrl, ctrl ? { signal: ctrl.signal } : {})
+    var resolver = (window.TV_HOME_CONFIG && window.TV_HOME_CONFIG.photosResolverUrl) || '';
+    var requestUrl = resolver
+      ? (resolver.replace(/\/+$/, '') + '?url=' + encodeURIComponent(targetUrl))
+      : targetUrl;
+
+    return fetch(requestUrl, ctrl ? { signal: ctrl.signal } : {})
       .then(function (res) {
         if (!res.ok) throw new Error('Could not access Google Photos album (HTTP ' + res.status + ')');
-        return res.text();
+        return resolver ? res.json() : res.text();
       })
-      .then(function (html) {
-        var urls = extractPhotoUrls(html);
+      .then(function (payload) {
+        var urls = [];
+        if (typeof payload === 'object' && payload && Array.isArray(payload.photos)) {
+          urls = payload.photos;
+        } else if (typeof payload === 'string') {
+          urls = extractPhotoUrls(payload);
+        }
         if (!urls.length) throw new Error('No photos found in this shared album. Make sure link sharing is turned on.');
         albumUrl = targetUrl;
         lastFetchedAt = Date.now();

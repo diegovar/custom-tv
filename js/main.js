@@ -657,6 +657,10 @@
     if (window.TVPhotos) {
       if (CFG.googlePhotosAlbumUrl && !window.TVPhotos.hasPhotos()) {
         window.TVPhotos.fetchAlbum(CFG.googlePhotosAlbumUrl).then(function () {
+          if (!settings.scenery || settings.scenery === 'auto') {
+            settings.scenery = 'photos';
+            saveSettings();
+          }
           renderSky(new Date());
         }).catch(function () {});
       } else {

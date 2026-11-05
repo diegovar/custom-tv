@@ -3,7 +3,8 @@
   'use strict';
 
   var CACHE_KEY = 'tvhome.photos.v1';
-  var albumUrl = '';
+  var defaultAlbumUrl = (typeof window !== 'undefined' && window.TV_HOME_CONFIG && window.TV_HOME_CONFIG.googlePhotosAlbumUrl) || '';
+  var albumUrl = defaultAlbumUrl;
   var allUrls = [];
   var shuffled = [];
   var queueIndex = 0;
@@ -178,8 +179,9 @@
   }
 
   function getInfo() {
+    var effectiveUrl = albumUrl || (typeof window !== 'undefined' && window.TV_HOME_CONFIG && window.TV_HOME_CONFIG.googlePhotosAlbumUrl) || '';
     return {
-      albumUrl: albumUrl,
+      albumUrl: effectiveUrl,
       count: allUrls.length,
       currentPhoto: currentPhotoUrl,
       fetchedAt: lastFetchedAt,

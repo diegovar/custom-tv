@@ -40,6 +40,9 @@
     } catch (e) { /* use defaults */ }
     var out = {};
     Object.keys(CFG.defaults).forEach(function (k) { out[k] = k in s ? s[k] : CFG.defaults[k]; });
+    if (CFG.googlePhotosAlbumUrl && (!out.scenery || out.scenery === 'auto')) {
+      out.scenery = 'photos';
+    }
     return out;
   }
   function saveSettings() {
@@ -329,7 +332,10 @@
   }
   function renderSettings() {
     var photoInfo = window.TVPhotos ? window.TVPhotos.getInfo() : null;
-    var photoLabel = photoInfo && photoInfo.count > 0 ? (photoInfo.count + ' ' + tr('photos')) : tr('Not configured');
+    var defaultUrl = (CFG && CFG.googlePhotosAlbumUrl) || '';
+    var photoLabel = (photoInfo && photoInfo.count > 0)
+      ? (photoInfo.count + ' ' + tr('photos'))
+      : (photoInfo && photoInfo.isFetching ? tr('Loading album…') : (defaultUrl ? tr('Loading album…') : tr('Not configured')));
     $('prefs').innerHTML = '<div class="col-title">' + tr('Preferences') + '<span>' + tr('Press OK to change') + '</span></div>' +
       PREFS.map(function (p) {
         return '<button class="row focusable" data-pref="' + p.key + '"><span>' + (p.key === 'language' && settings.language === 'pt-PT' ? 'Idioma / Language' : tr(p.label)) + '</span><b>' + prefValue(p) + '</b></button>';
@@ -349,12 +355,17 @@
     var info = P.getInfo();
     var inp = $('albumInput');
     var st = $('albumStatus');
-    if (inp && !inp.value && info.albumUrl) inp.value = info.albumUrl;
+    var defaultUrl = (CFG && CFG.googlePhotosAlbumUrl) || '';
+    if (inp && (!inp.value || inp.value === '')) {
+      inp.value = info.albumUrl || defaultUrl;
+    }
     if (st) {
       if (info.isFetching) {
         st.innerHTML = '<span class="status-badge loading">…</span> ' + tr('Loading album…');
       } else if (info.count > 0) {
         st.innerHTML = '<span class="status-badge connected">●</span> ' + tr('{count} photos connected', { count: info.count });
+      } else if (defaultUrl) {
+        st.innerHTML = '<span class="status-badge loading">…</span> ' + tr('Loading album…');
       } else {
         st.innerHTML = '<span class="status-badge disconnected">○</span> ' + tr('No album connected');
       }
@@ -662,7 +673,10 @@
             saveSettings();
           }
           renderSky(new Date());
-        }).catch(function () {});
+          renderSettings();
+        }).catch(function (err) {
+          console.error('Failed to load default photos album:', err);
+        });
       } else {
         window.TVPhotos.sync(false);
       }

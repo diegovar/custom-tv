@@ -11,9 +11,11 @@
     <tizen:privilege name="http://tizen.org/privilege/application.info"/>
     <tizen:privilege name="http://tizen.org/privilege/tv.inputdevice"/>
     <tizen:privilege name="http://tizen.org/privilege/tv.window"/>
+    <access origin="*" subdomains="true"/>
     <access origin="https://api.open-meteo.com" subdomains="false"/>
     <access origin="https://photos.app.goo.gl" subdomains="false"/>
     <access origin="https://photos.google.com" subdomains="false"/>
     <access origin="https://googleusercontent.com" subdomains="true"/>
+    <access origin="https://*.run.app" subdomains="true"/>
     <tizen:setting screen-orientation="landscape" context-menu="disable" background-support="disable" encryption="disable" install-location="auto" hwkey-event="enable"/>
 </widget>

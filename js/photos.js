@@ -31,16 +31,38 @@
 
   function extractPhotoUrls(html) {
     if (!html || typeof html !== 'string') return [];
-    // Match Google Photos CDN media URLs
+
+    // Attempt to parse structured ds:1 data to filter out videos
+    var ds1Match = html.match(/AF_initDataCallback\(\{key:\s*['"]ds:1['"].*?data:(.*?),\s*sideChannel:/s);
+    if (ds1Match) {
+      try {
+        var data = JSON.parse(ds1Match[1]);
+        var items = (data && Array.isArray(data[1])) ? data[1] : [];
+        var photos = [];
+        for (var i = 0; i < items.length; i++) {
+          var item = items[i];
+          var meta = (item && item[9] && typeof item[9] === 'object') ? item[9] : {};
+          // Protobuf tag 76647426 is VideoMetadata (exclude video previews)
+          if (meta['76647426']) continue;
+          if (item && Array.isArray(item[1]) && typeof item[1][0] === 'string') {
+            photos.push(format4K(item[1][0]));
+          }
+        }
+        if (photos.length > 0) return photos;
+      } catch (e) {
+        /* fallback to regex below */
+      }
+    }
+
+    // Fallback regex if ds:1 was missing
     var regex = /https?:\/\/[a-z0-9-]+\.googleusercontent\.com\/(?:pw\/)?[A-Za-z0-9_-]{30,}/g;
     var matches = html.match(regex) || [];
     var seen = {};
     var result = [];
 
-    for (var i = 0; i < matches.length; i++) {
-      var raw = matches[i];
+    for (var j = 0; j < matches.length; j++) {
+      var raw = matches[j];
       var base = raw.replace(/=.*$/, '');
-      // Avoid tiny avatars or icons
       if (seen[base]) continue;
       seen[base] = true;
       result.push(format4K(base));

@@ -55,6 +55,22 @@ test('extractPhotoUrls extracts unique Google Photos CDN URLs with 4K UHD dimens
   assert.equal(urls[1], 'https://lh3.googleusercontent.com/pw/AP1GczO9876543210zyxwvutsrqponmlkjihgfedcba_WXYZ=w3840-h2160');
 });
 
+test('extractPhotoUrls excludes video items when ds:1 contains video metadata', () => {
+  const { TVPhotos } = loadPhotos();
+  const ds1Html = `
+    AF_initDataCallback({key: 'ds:1', hash: '1', data:[null,[
+      ["video_item_1", ["https://lh3.googleusercontent.com/pw/VIDEO_PREVIEW_1"], 1700000000, "", 0, 0, [], [], 2, {"76647426": [12000]}],
+      ["photo_item_1", ["https://lh3.googleusercontent.com/pw/PHOTO_ACTUAL_1"], 1700000000, "", 0, 0, [], [], 2, {"15": 12345}],
+      ["video_item_2", ["https://lh3.googleusercontent.com/pw/VIDEO_PREVIEW_2"], 1700000000, "", 0, 0, [], [], 2, {"76647426": [8500]}],
+      ["photo_item_2", ["https://lh3.googleusercontent.com/pw/PHOTO_ACTUAL_2"], 1700000000, "", 0, 0, [], [], 2, {}]
+    ]], sideChannel: {}});
+  `;
+  const urls = TVPhotos.extractPhotoUrls(ds1Html);
+  assert.equal(urls.length, 2, 'Should filter out both videos and return only the 2 photos');
+  assert.equal(urls[0], 'https://lh3.googleusercontent.com/pw/PHOTO_ACTUAL_1=w3840-h2160');
+  assert.equal(urls[1], 'https://lh3.googleusercontent.com/pw/PHOTO_ACTUAL_2=w3840-h2160');
+});
+
 test('rotation queue advances after interval and cycles without crashing', () => {
   const cachedData = JSON.stringify({
     albumUrl: 'https://photos.app.goo.gl/test',

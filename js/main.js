@@ -6,7 +6,7 @@
   var CFG = window.TV_HOME_CONFIG, I = window.TVIcons, W = window.TVWeather;
   var homeIds = CFG.homeApps.map(function (a) { return a.id; });
   var $ = function (id) { return document.getElementById(id); };
-  var SETTINGS_KEY = 'tvhome.settings.v1';
+  var SETTINGS_KEY = 'tvhome.settings.v2';
 
   var L = window.TVI18n, tr = L.text;
   var settings = loadSettings();
@@ -23,7 +23,21 @@
   // ---------- settings ----------
   function loadSettings() {
     var s = {};
-    try { s = JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; } catch (e) { /* use defaults */ }
+    try {
+      s = JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {};
+      if (!Object.keys(s).length) {
+        var v1 = JSON.parse(localStorage.getItem('tvhome.settings.v1')) || {};
+        if (v1 && typeof v1 === 'object') {
+          Object.keys(v1).forEach(function (k) {
+            if (k === 'hidden') {
+              if (Array.isArray(v1.hidden) && v1.hidden.length > 0) s.hidden = v1.hidden;
+            } else {
+              s[k] = v1[k];
+            }
+          });
+        }
+      }
+    } catch (e) { /* use defaults */ }
     var out = {};
     Object.keys(CFG.defaults).forEach(function (k) { out[k] = k in s ? s[k] : CFG.defaults[k]; });
     return out;
@@ -160,13 +174,26 @@
   function rank(a) {
     var homeIndex = homeIds.indexOf(a.id);
     if (homeIndex >= 0) return homeIndex;
-    var hay = (a.id + ' ' + a.name).toLowerCase();
-    for (var i = 0; i < CFG.favoriteOrder.length; i++) if (hay.indexOf(CFG.favoriteOrder[i]) >= 0) return homeIds.length + i;
+    for (var i = 0; i < CFG.favoriteOrder.length; i++) {
+      var fav = CFG.favoriteOrder[i];
+      if (window.TVApps && window.TVApps.matchBrand) {
+        if (window.TVApps.matchBrand(fav, a.name, a.id)) return homeIds.length + i;
+      } else {
+        var hay = (a.id + ' ' + a.name).toLowerCase();
+        if (hay.indexOf(fav) >= 0) return homeIds.length + i;
+      }
+    }
     return 999;
   }
   function brandColor(a) {
-    var words = (a.id + ' ' + a.name).toLowerCase().split(/[^a-z0-9+]+/);
-    for (var i = 0; i < words.length; i++) if (BRAND[words[i]]) return BRAND[words[i]];
+    for (var k in BRAND) {
+      if (window.TVApps && window.TVApps.matchBrand) {
+        if (window.TVApps.matchBrand(k, a.name, a.id)) return BRAND[k];
+      } else {
+        var words = (a.id + ' ' + a.name).toLowerCase().split(/[^a-z0-9+]+/);
+        for (var i = 0; i < words.length; i++) if (BRAND[words[i]]) return BRAND[words[i]];
+      }
+    }
     return null;
   }
   function sortApps(list) {
@@ -235,7 +262,9 @@
       var prevId = focused && focused.dataset.app;
       allApps = list;
       if (!Array.isArray(settings.hidden)) {
-        settings.hidden = list.filter(function (a) { return homeIds.indexOf(a.id) < 0; }).map(function (a) { return a.id; });
+        settings.hidden = list.filter(function (a) {
+          return homeIds.indexOf(a.id) < 0 && rank(a) >= 999;
+        }).map(function (a) { return a.id; });
       }
       renderGrid();
       if (scope === $('home')) {
@@ -388,25 +417,50 @@
     }
   }
 
+  var overlayStack = [];
+
   function openOverlay(id) {
-    homeFocus = focused;
     var el = $(id);
+    if (!el) return;
+
+    if (scope && scope !== $('home') && scope !== el) {
+      overlayStack.push({ scope: scope, focused: focused });
+      scope.hidden = true;
+    } else {
+      homeFocus = focused;
+      overlayStack = [];
+    }
+
     if (id === 'forecast') renderForecast();
     if (id === 'settings') renderSettings();
     if (id === 'photos') renderPhotosModal();
     if (id === 'ambient') { renderAmbient(new Date()); document.body.classList.add('ambient-on'); }
     else document.body.classList.add('overlay-on');
+
     el.hidden = false;
     scope = el;
     focusEl(el.querySelector('.focusable'));
   }
+
   function closeOverlay() {
-    if (scope === $('home')) return;
-    scope.hidden = true;
-    document.body.classList.remove('ambient-on');
-    document.body.classList.remove('overlay-on');
-    scope = $('home');
-    focusEl(homeFocus && document.contains(homeFocus) ? homeFocus : firstTile());
+    if (scope === $('home') && overlayStack.length === 0) return;
+
+    if (scope && scope !== $('home')) {
+      scope.hidden = true;
+    }
+
+    if (overlayStack.length > 0) {
+      var prev = overlayStack.pop();
+      scope = prev.scope;
+      scope.hidden = false;
+      if (scope.id === 'settings') renderSettings();
+      focusEl(prev.focused && document.contains(prev.focused) ? prev.focused : scope.querySelector('.focusable'));
+    } else {
+      document.body.classList.remove('ambient-on');
+      document.body.classList.remove('overlay-on');
+      scope = $('home');
+      focusEl(homeFocus && document.contains(homeFocus) ? homeFocus : firstTile());
+    }
   }
 
   // ---------- focus & navigation ----------
@@ -531,12 +585,25 @@
   // Samsung remote pointer and desktop mouse.
   document.addEventListener('mouseover', function (e) {
     var el = e.target.closest && e.target.closest('.focusable');
-    if (el && scope.contains(el) && el !== focused) focusEl(el);
+    if (el) {
+      var container = el.closest('.overlay, .ambient, #home');
+      if (container && !container.hidden) {
+        if (container !== scope) scope = container;
+        if (el !== focused) focusEl(el);
+      }
+    }
   });
   document.addEventListener('click', function (e) {
     if (scope === $('ambient')) { closeOverlay(); return; }
     var el = e.target.closest && e.target.closest('.focusable');
-    if (el && scope.contains(el)) { focusEl(el); activate(el); }
+    if (el) {
+      var container = el.closest('.overlay, .ambient, #home');
+      if (container && !container.hidden) scope = container;
+      focusEl(el);
+      activate(el);
+    } else if (e.target && e.target.classList && e.target.classList.contains('overlay')) {
+      closeOverlay();
+    }
   });
 
   // ---------- toast ----------
